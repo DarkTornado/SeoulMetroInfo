@@ -1,4 +1,5 @@
 var axios = require('axios');
+const cheerio = require('cheerio');
 
 (async function() {
     var url = 'https://smapp.seoulmetro.co.kr:58443/traininfo/traininfoUserMap.do';
