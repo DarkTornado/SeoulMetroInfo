@@ -25,9 +25,15 @@ const cheerio = require('cheerio');
     var result = [];
     for (var n = 0; n < data.length; n++) {
         var datum = $(data[n]);
-        var value = datum.attr('title');
-        result.push(value);
+        datum = datum.attr('title');
+        datum = datum.split(' ');
+        result.push({
+            trainNo: datum[0],
+            station: datum[2],
+            status: datum[3],
+            terminal: datum[4]
+        });
     }
-    console.log(result);
+    console.log(JSON.stringify(result, null, 4));
 })();
 
