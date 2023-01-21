@@ -1,11 +1,11 @@
 var axios = require('axios');
 const cheerio = require('cheerio');
 
-(async function() {
+async function loadData(line) {
     var url = 'https://smapp.seoulmetro.co.kr:58443/traininfo/traininfoUserMap.do';
     var response = await axios.post(url, {
         "params": {
-            'line': '1',
+            'line': line + '',
             'isCb': 'N'
         }
     }, {
@@ -14,19 +14,18 @@ const cheerio = require('cheerio');
         }
     });
     var $ = cheerio.load(response.data);
-    var data = $('div.1line_metro').children('div');
     var result = [];
+    parse($, 'div.' + line + 'line_metro', result);
+    parse($, 'div.' + line + 'line_korail', result);
+
+    return result;
+}
+
+function parse($, selector, result) {
+    var data = $(selector).children('div');
     for (var n = 0; n < data.length; n++) {
         var datum = $(data[n]);
-        var value = datum.attr('title');
-        result.push(value);
-    }
-    var data = $('div.1line_korail').children('div');
-    var result = [];
-    for (var n = 0; n < data.length; n++) {
-        var datum = $(data[n]);
-        datum = datum.attr('title');
-        datum = datum.split(' ');
+        datum = datum.attr('title').split(' ');
         result.push({
             trainNo: datum[0],
             station: datum[2],
@@ -34,6 +33,7 @@ const cheerio = require('cheerio');
             terminal: datum[4]
         });
     }
-    console.log(JSON.stringify(result, null, 4));
-})();
+}
+
+module.exports.getRunningData = loadData;
 
