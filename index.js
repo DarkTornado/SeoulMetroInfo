@@ -6,7 +6,7 @@ http.createServer(async (req, res) => {
         'Content-Type': 'application/json; charset=utf-8;',
         'Access-Control-Allow-Origin': '*'
     });
-    var data = await subway.getRunningData(1);
+    const data = await subway.getRunningData(1);
     res.write(JSON.stringify(data, null, 4));
     res.end();
 }).listen(8080);
